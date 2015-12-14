@@ -1,0 +1,45 @@
+{
+  "name": "node-weixin-router",
+  "version": "0.0.1",
+  "description": "node weixin router for specified requests",
+  "homepage": "www.node-weixin.com",
+  "author": {
+    "name": "calidion",
+    "email": "calidion@gmail.com",
+    "url": "blog.3gcnbeta.com"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index.js",
+  "keywords": [
+    "router"
+  ],
+  "repository": "node-weixin/node-weixin-router",
+  "devDependencies": {
+    "babel-core": "^5.5.0",
+    "del": "^2.0.2",
+    "express": "^4.13.3",
+    "gulp": "^3.6.0",
+    "gulp-babel": "^5.1.0",
+    "gulp-coveralls": "^0.1.0",
+    "gulp-eslint": "^1.0.0",
+    "gulp-exclude-gitignore": "^1.0.0",
+    "gulp-istanbul": "^0.9.0",
+    "gulp-mocha": "^2.0.0",
+    "gulp-nsp": "^2.1.0",
+    "gulp-plumber": "^1.0.0",
+    "isparta": "^3.0.3"
+  },
+  "scripts": {
+    "prepublish": "gulp prepublish",
+    "test": "gulp"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "node-form-validator": "^0.2.0",
+    "node-weixin-api": "^0.2.6",
+    "node-weixin-order": "0.0.3",
+    "web-errors": "^0.1.5"
+  }
+}
