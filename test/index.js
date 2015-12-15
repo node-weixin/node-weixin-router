@@ -9,7 +9,6 @@ import express from 'express';
 
 var Router = express.Router;
 var router = new Router();
-//var server = express();
 
 var appConfig = require('./config');
 

@@ -10,12 +10,14 @@ var coveralls = require('gulp-coveralls');
 var babel = require('gulp-babel');
 var del = require('del');
 var isparta = require('isparta');
+var fs = require('fs');
+var minimist = require('minimist');
 
 // Initialize the babel transpiler so ES2015 files gets compiled
 // when they're loaded
 require('babel-core/register');
 
-gulp.task('static', function() {
+gulp.task('static', function () {
   return gulp.src('**/*.js')
     .pipe(excludeGitignore())
     .pipe(eslint())
@@ -23,13 +25,13 @@ gulp.task('static', function() {
     .pipe(eslint.failAfterError());
 });
 
-gulp.task('nsp', function(cb) {
+gulp.task('nsp', function (cb) {
   nsp({
     package: path.resolve('package.json')
   }, cb);
 });
 
-gulp.task('pre-test', function() {
+gulp.task('pre-test', function () {
   return gulp.src('lib/**/*.js')
     .pipe(istanbul({
       includeUntested: true,
@@ -38,25 +40,41 @@ gulp.task('pre-test', function() {
     .pipe(istanbul.hookRequire());
 });
 
-gulp.task('test', ['pre-test'], function(cb) {
+gulp.task('test', ['pre-test'], function (cb) {
   var mochaErr;
+
+  var optFile = path.resolve(__dirname, 'test/mocha.opts');
+
+  var options = {
+    reporter: 'spec'
+  };
+  if (fs.existsSync(optFile)) {
+    var text = String(fs.readFileSync(optFile));
+    console.log(text);
+    text = text.replace(/\n/g, ' ');
+    console.log(text);
+    var opt = minimist(text.split(' '));
+    delete opt['_'];
+    options = opt;
+  }
+
+  console.log(optFile);
+  console.log(options);
 
   gulp.src('test/**/*.js')
     .pipe(plumber())
-    .pipe(mocha({
-      reporter: 'spec'
-    }))
-    .on('error', function(err) {
+    .pipe(mocha(options))
+    .on('error', function (err) {
       mochaErr = err;
       throw err;
     })
     .pipe(istanbul.writeReports())
-    .on('end', function() {
+    .on('end', function () {
       cb(mochaErr);
     });
 });
 
-gulp.task('coveralls', ['test'], function() {
+gulp.task('coveralls', ['test'], function () {
   if (!process.env.CI) {
     return;
   }
@@ -65,13 +83,13 @@ gulp.task('coveralls', ['test'], function() {
     .pipe(coveralls());
 });
 
-gulp.task('babel', ['clean'], function() {
+gulp.task('babel', ['clean'], function () {
   return gulp.src('lib/**/*.js')
     .pipe(babel())
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('clean', function() {
+gulp.task('clean', function () {
   return del('dist');
 });
 
