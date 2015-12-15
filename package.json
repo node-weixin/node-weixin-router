@@ -29,7 +29,8 @@
     "gulp-mocha": "^2.0.0",
     "gulp-nsp": "^2.1.0",
     "gulp-plumber": "^1.0.0",
-    "isparta": "^3.0.3"
+    "isparta": "^3.0.3",
+    "validator": "^4.4.0"
   },
   "scripts": {
     "prepublish": "gulp prepublish",
