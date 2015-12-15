@@ -39,7 +39,8 @@
   "dependencies": {
     "node-form-validator": "^0.2.0",
     "node-weixin-api": "^0.2.6",
-    "node-weixin-order": "0.0.3",
+    "node-weixin-order": "^0.0.3",
+    "node-weixin-pay": "^0.2.4",
     "web-errors": "^0.1.5"
   }
 }
