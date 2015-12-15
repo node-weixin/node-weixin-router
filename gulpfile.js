@@ -50,16 +50,11 @@ gulp.task('test', ['pre-test'], function (cb) {
   };
   if (fs.existsSync(optFile)) {
     var text = String(fs.readFileSync(optFile));
-    console.log(text);
     text = text.replace(/\n/g, ' ');
-    console.log(text);
     var opt = minimist(text.split(' '));
-    delete opt['_'];
+    delete opt._;
     options = opt;
   }
-
-  console.log(optFile);
-  console.log(options);
 
   gulp.src('test/**/*.js')
     .pipe(plumber())
