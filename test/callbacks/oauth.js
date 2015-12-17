@@ -9,9 +9,6 @@ it('should test oauth callback success', function (done) {
       access: 'http://www.sina.com/'
     }
   }, {
-    emit: function () {
-    }
-  }, {
     redirect: function (url) {
       assert.equal(true, validator.isURL(url));
       done();
@@ -26,9 +23,6 @@ it('should test oauth callback success', function (done) {
     urls: {
       redirect: 'http://www.sina.com/',
       access: 'http://www.sina.com/'
-    }
-  }, {
-    emit: function () {
     }
   }, {
     redirect: function (url) {
