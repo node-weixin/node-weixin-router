@@ -1,6 +1,6 @@
 {
   "name": "node-weixin-router",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "node weixin router for specified requests",
   "homepage": "www.node-weixin.com",
   "author": {
@@ -39,11 +39,11 @@
   },
   "license": "MIT",
   "dependencies": {
-    "node-form-validator": "0.2.0",
-    "node-weixin-api": "0.2.9",
-    "node-weixin-events": "0.0.3",
-    "node-weixin-order": "0.0.4",
-    "node-weixin-session": "0.0.1",
+    "node-form-validator": "^0.2.0",
+    "node-weixin-api": "^0.2.9",
+    "node-weixin-events": "^0.0.3",
+    "node-weixin-order": "^0.0.5",
+    "node-weixin-session": "^0.0.1",
     "web-errors": "^0.1.5"
   }
 }
