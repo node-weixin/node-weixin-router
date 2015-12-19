@@ -3,6 +3,8 @@ import nodeWeixinRouter from '../lib';
 import validator from 'validator';
 import session from 'node-weixin-session';
 
+import conf from './config';
+
 
 var errors = require('web-errors').errors;
 
@@ -16,6 +18,16 @@ var req = {
     id: 1
   }
 };
+
+session.registerGet(function(r, key) {
+  return conf[key];
+});
+
+session.registerSet(function(r, key, value) {
+  conf[key] = value;
+});
+
+var app = session.get(req, 'app');
 
 var handlers = null;
 
@@ -74,13 +86,13 @@ describe('node-weixin-router', function () {
     var req1 = {query: {url: 'http://www.sina.com/'}, session: {id: 1}};
     var res = {
       json: function (data) {
-        var app = session.get(req1, 'app');
         assert.equal(true, data.code === errors.SUCCESS.code);
         assert.equal(true, data.message === errors.SUCCESS.message);
         assert.equal(true, data.data.appId === app.id);
         done();
       }
     };
+
     handlers.jssdk.config(req1, res);
   });
 
