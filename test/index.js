@@ -1,6 +1,7 @@
 import assert from 'assert';
 import nodeWeixinRouter from '../lib';
 import validator from 'validator';
+import session from 'node-weixin-session';
 
 
 var errors = require('web-errors').errors;
@@ -10,7 +11,11 @@ import express from 'express';
 var Router = express.Router;
 var router = new Router();
 
-var appConfig = require('./config');
+var req = {
+  session: {
+    id: 1
+  }
+};
 
 var handlers = null;
 
@@ -39,12 +44,12 @@ describe('node-weixin-router', function () {
   });
 
   it('should be able to init', function () {
-    handlers = nodeWeixinRouter.init(router, appConfig);
+
+    handlers = nodeWeixinRouter.init(router);
     assert(true, true);
   });
 
   it('should be able to handle auth', function (done) {
-    var req = {};
     var res = {
       send: function () {
         done();
@@ -54,7 +59,6 @@ describe('node-weixin-router', function () {
   });
 
   it('should be able to handle jssdk without data', function (done) {
-    var req = {};
     var res = {
       json: function (data) {
         assert.equal(true, data.code === errors.ERROR.code);
@@ -67,20 +71,21 @@ describe('node-weixin-router', function () {
 
 
   it('should be able to handle jssdk with url', function (done) {
-    var req = {query: {url: 'http://www.sina.com/'}};
+    var req1 = {query: {url: 'http://www.sina.com/'}, session: {id: 1}};
     var res = {
       json: function (data) {
+        var app = session.get(req1, 'app');
         assert.equal(true, data.code === errors.SUCCESS.code);
         assert.equal(true, data.message === errors.SUCCESS.message);
-        assert.equal(true, data.data.appId === appConfig.app.id);
+        assert.equal(true, data.data.appId === app.id);
         done();
       }
     };
-    handlers.jssdk.config(req, res);
+    handlers.jssdk.config(req1, res);
   });
 
   it('should be able to handle jssdk with bad app info', function (done) {
-    var req = {query: {url: 'http://www.sina.com/'}};
+    var req1 = {query: {url: 'http://www.sina.com/'}, session: {id: 1}};
     var res = {
       json: function (data) {
         assert.equal(true, data.code === errors.ERROR.code);
@@ -88,58 +93,64 @@ describe('node-weixin-router', function () {
         done();
       }
     };
-    var bads = nodeWeixinRouter.init(router, {app: {}});
+    session.set(req1, 'app', {});
+
+    var bads = nodeWeixinRouter.init(router);
 
     bads.jssdk.config(req, res);
   });
 
   it('should be able to handle oauth access', function (done) {
-    var req = {query: {url: 'http://www.sina.com/'}};
+    var req1 = {query: {url: 'http://www.sina.com/'}, session: {id: 1}};
     var res = {
       redirect: function (url) {
         assert.equal(true, validator.isURL(url));
         done();
       }
     };
-    handlers.oauth.access(req, res);
+    session.set(req1, 'oauth', {state: 'state', scope: 0});
+    handlers.oauth.access(req1, res);
   });
 
   it('should be able to handle oauth success', function (done) {
-    var req = {query: {}};
+    var req1 = {query: {}, session: {id: 1}};
+
     var res = {
       redirect: function (url) {
         assert.equal(true, validator.isURL(url));
         done();
       }
     };
-    handlers.oauth.success(req, res);
+    session.set(req1, 'oauth', {state: 'state', scope: 0});
+    handlers.oauth.success(req1, res);
   });
 
   it('should be able to handle oauth success', function (done) {
-    var req = {query: {code: '133'}};
+    var req1 = {query: {code: '133'}, session: {id: 1}};
+
     var res = {
       redirect: function (url) {
         assert.equal(true, validator.isURL(url));
         done();
       }
     };
-    handlers.oauth.success(req, res);
+    handlers.oauth.success(req1, res);
   });
 
 
   it('should be able to handle pay back', function () {
-    var req = {body: {}};
+    var req1 = {body: {}, session: {id: 1}};
+
     var res = {
       end: function () {
 
       }
     };
-    handlers.pay.callback(req, res);
+    handlers.pay.callback(req1, res);
   });
 
 
   it('should be able to handle pay init', function () {
-    var req = {};
     var res = {
       json: function () {
       }
@@ -152,7 +163,7 @@ describe('node-weixin-router', function () {
       json: function () {
       }
     };
-    var callback = handlers.pay._unified(res);
+    var callback = handlers.pay._unified(req, res);
     callback(true, {});
   });
 
@@ -161,7 +172,7 @@ describe('node-weixin-router', function () {
       json: function () {
       }
     };
-    var callback = handlers.pay._unified(res);
+    var callback = handlers.pay._unified(req, res);
     callback(false, {});
   });
 

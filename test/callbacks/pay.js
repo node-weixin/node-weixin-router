@@ -1,8 +1,18 @@
 var assert = require('assert');
-//var validator = require('validator');
 var pay = require('../../lib/callbacks/pay');
 var appConfig = require('../config');
 var errors = require('web-errors').errors;
+
+var req = {
+  session: {
+    id: 1
+  }
+};
+
+var session = require('node-weixin-session');
+session.set(req, 'app', appConfig.app);
+session.set(req, 'merchant', appConfig.merchant);
+session.set(req, 'certificate', appConfig.certificate);
 
 
 it('should test pay callback', function (done) {
@@ -15,7 +25,7 @@ it('should test pay callback', function (done) {
 });
 
 it('should test pay unified config', function (done) {
-  var unified = pay.unified(appConfig, {
+  var unified = pay.unified(req, {
     json: function(data) {
       assert.equal(true, data.code === errors.SUCCESS.code);
       assert.equal(true, data.message === errors.SUCCESS.message);
