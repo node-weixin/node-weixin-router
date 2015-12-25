@@ -15,9 +15,11 @@ var certificate = {
 };
 
 var urls = {
-  success: 'http://www.sina.com/',
-  access: 'http://www.sina.com/',
-  redirect: 'http://www.sina.com/'
+  oauth: {
+    success: 'http://www.sina.com/',
+    access: 'http://www.sina.com/',
+    redirect: 'http://www.sina.com/'
+  }
 };
 
 var oauth = {

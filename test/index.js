@@ -2,6 +2,7 @@ import assert from 'assert';
 import nodeWeixinRouter from '../lib';
 import validator from 'validator';
 import session from 'node-weixin-session';
+import settings from 'node-weixin-settings';
 
 import conf from './config';
 
@@ -19,6 +20,9 @@ var req = {
   }
 };
 
+var wxRouter = require('../lib/');
+
+
 session.registerGet(function(r, key) {
   return conf[key];
 });
@@ -27,7 +31,25 @@ session.registerSet(function(r, key, value) {
   conf[key] = value;
 });
 
-var app = session.get(req, 'app');
+var conf1 = {};
+
+settings.registerGet(function(r, key) {
+  return conf1[key];
+});
+
+settings.registerSet(function(r, key, value) {
+  conf1[key] = value;
+});
+
+var id = wxRouter.getId(req);
+
+settings.set(id, 'app', conf.app);
+settings.set(id, 'merchant', conf.merchant);
+settings.set(id, 'certificate', conf.certificate);
+settings.set(id, 'urls', conf.urls);
+settings.set(id, 'oauth', conf.oauth);
+
+var app = settings.get(id, 'app');
 
 var handlers = null;
 
@@ -105,8 +127,8 @@ describe('node-weixin-router', function () {
         done();
       }
     };
-    session.set(req1, 'app', {});
-
+    var id1 = wxRouter.getId(req1);
+    settings.set(id1, 'app', {});
     var bads = nodeWeixinRouter.init(router);
 
     bads.jssdk.config(req, res);
@@ -188,4 +210,20 @@ describe('node-weixin-router', function () {
     callback(false, {});
   });
 
+  it('should be able to get id by params', function() {
+    var req2 = {
+      params: {
+        id: 13
+      }
+    };
+    var id2 = wxRouter.getId(req2);
+    assert.equal(true, id2 === 13);
+  });
+
+  it('should be able to get id', function() {
+    var req3 = {
+    };
+    var id3 = wxRouter.getId(req3);
+    assert.equal(true, id3 === process.env.APP_ID);
+  });
 });
