@@ -1,6 +1,6 @@
 {
   "name": "node-weixin-router",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "node weixin router for specified requests",
   "homepage": "www.node-weixin.com",
   "author": {
@@ -42,8 +42,8 @@
     "node-form-validator": "^0.2.0",
     "node-weixin-api": "^0.2.9",
     "node-weixin-events": "^0.0.3",
-    "node-weixin-order": "^0.0.5",
-    "node-weixin-settings": "0.0.6",
+    "node-weixin-order": "^0.0.6",
+    "node-weixin-settings": "^0.0.6",
     "web-errors": "^0.1.5"
   }
 }
