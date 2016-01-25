@@ -6,8 +6,8 @@ import settings from 'node-weixin-settings';
 
 import conf from './config';
 
+var errors = require('../lib/errors');
 
-var errors = require('web-errors').errors;
 
 import express from 'express';
 
@@ -46,6 +46,7 @@ settings.registerSet(function(r, key, value, cb) {
 });
 
 var id = wxRouter.getId(req);
+console.log(id);
 
 var async = require('async');
 async.series([
@@ -130,8 +131,8 @@ async.series([
       it('should be able to handle jssdk without data', function(done) {
         var res = {
           json: function(data) {
-            assert.equal(true, data.code === errors.ERROR.code);
-            assert.equal(true, data.message === errors.ERROR.message);
+            assert.equal(true, data.code === errors.Error.code);
+            assert.equal(true, data.message === errors.Error.message);
             done();
           }
         };
@@ -150,8 +151,8 @@ async.series([
         };
         var res = {
           json: function(data) {
-            assert.equal(true, data.code === errors.SUCCESS.code);
-            assert.equal(true, data.message === errors.SUCCESS.message);
+            assert.equal(true, data.code === errors.Success.code);
+            assert.equal(true, data.message === errors.Success.message);
             assert.equal(true, data.data.appId === app.id);
             done();
           }
@@ -171,8 +172,8 @@ async.series([
         };
         var res = {
           json: function(data) {
-            assert.equal(true, data.code === errors.ERROR.code);
-            assert.equal(true, data.message === errors.ERROR.message);
+            assert.equal(true, data.code === errors.Error.code);
+            assert.equal(true, data.message === errors.Error.message);
             done();
           }
         };
@@ -211,7 +212,7 @@ async.series([
         var req1 = {
           query: {},
           session: {
-            id: 1
+            id: id
           }
         };
 
@@ -221,7 +222,7 @@ async.series([
             done();
           }
         };
-        session.set(req1, 'oauth', {
+        settings.set(id, 'oauth', {
           state: 'state',
           scope: 0
         });

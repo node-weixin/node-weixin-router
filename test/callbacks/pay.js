@@ -1,7 +1,7 @@
 var assert = require('assert');
 var pay = require('../../lib/callbacks/pay');
 var appConfig = require('../config');
-var errors = require('web-errors').errors;
+var errors = require('../../lib/errors');
 
 var router = require('../../lib/');
 
@@ -31,8 +31,10 @@ settings.set(id, 'app', appConfig.app, function() {
       it('should test pay unified config', function (done) {
         var unified = pay.unified(req, {
           json: function (data) {
-            assert.equal(true, data.code === errors.SUCCESS.code);
-            assert.equal(true, data.message === errors.SUCCESS.message);
+            console.log(data);
+            console.log(errors.Success);
+            assert.equal(true, data.code === errors.Success.code);
+            assert.equal(true, data.message === errors.Success.message);
             assert.equal(true, data.data.appId === appConfig.app.id);
             done();
           }

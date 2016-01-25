@@ -40,12 +40,12 @@
   },
   "license": "MIT",
   "dependencies": {
+    "errorable": "^0.1.2",
+    "errorable-common": "^0.0.6",
     "node-form-validator": "^0.3.0",
     "node-weixin-api": "^0.3.0-beta",
     "node-weixin-events": "^0.0.3",
     "node-weixin-order": "^0.0.6",
-    "node-weixin-session": "0.0.1",
-    "node-weixin-settings": "^0.1.0",
-    "web-errors": "^0.1.5"
+    "node-weixin-settings": "^0.1.0"
   }
 }
