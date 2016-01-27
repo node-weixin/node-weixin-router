@@ -1,7 +1,6 @@
 import assert from 'assert';
 import nodeWeixinRouter from '../lib';
 import validator from 'validator';
-import session from 'node-weixin-session';
 import settings from 'node-weixin-settings';
 
 import conf from './config';
@@ -22,18 +21,8 @@ var req = {
 
 var wxRouter = require('../lib/');
 
-
-session.registerGet(function(r, key) {
-  return conf[key];
-});
-
-session.registerSet(function(r, key, value) {
-  conf[key] = value;
-});
-
 var conf1 = {};
 var handlers = null;
-var app = null;
 
 
 settings.registerGet(function(r, key, cb) {
@@ -44,54 +33,65 @@ settings.registerSet(function(r, key, value, cb) {
   conf1[key] = value;
   cb();
 });
+settings.registerAll(function(r, cb) {
+  cb(conf1);
+});
 
 var id = wxRouter.getId(req);
-console.log(id);
 
 var async = require('async');
-async.series([
-    function(cb) {
-      settings.set(id, 'app', conf.app, function() {
-        console.log('set app');
-        cb(null);
-      });
-    },
-    function(cb) {
-      settings.set(id, 'merchant', conf.merchant, function() {
-        console.log('set merchant');
-        cb(null);
-      });
-    },
-    function(cb) {
-      settings.set(id, 'certificate', conf.certificate, function() {
-        console.log('set certificate');
-        cb(null);
-      });
-    },
-    function(cb) {
-      settings.set(id, 'urls', conf.urls, function() {
-        console.log('set urls');
-        cb(null);
-      });
-    },
-    function(cb) {
-      settings.set(id, 'oauth', conf.oauth, function() {
-        console.log('set oauth');
-        cb(null);
-      });
-    },
-    function(cb) {
-      settings.get(id, 'app', function(data) {
-        app = data;
-        cb(null);
-      });
-    }
-  ],
+async.series([(cb) => {
+    settings.set(id, 'app', conf.app, function() {
+      cb(null);
+    });
+  }, (cb) => {
+    settings.set(id, 'merchant', conf.merchant, function() {
+      cb(null);
+    });
+  }, (cb) => {
+    settings.set(id, 'certificate', conf.certificate, function() {
+      cb(null);
+    });
+  }, (cb) => {
+    settings.set(id, 'urls', conf.urls, function() {
+      cb(null);
+    });
+  }, (cb) => {
+    settings.set(id, 'oauth', conf.oauth, function() {
+      cb(null);
+    });
+  }, (cb) => {
+    settings.get(id, 'app', function(data) {
+      assert.deepEqual(conf.app, data);
+      cb(null);
+    });
+  }, (cb) => {
+    settings.get(id, 'merchant', function(data) {
+      assert.deepEqual(conf.merchant, data);
+      cb(null);
+    });
+  }, (cb) => {
+    settings.get(id, 'certificate', function(data) {
+      assert.deepEqual(conf.certificate, data);
+      cb(null);
+    });
+  }, (cb) => {
+    settings.get(id, 'urls', function(data) {
+      assert.deepEqual(conf.urls, data);
+      cb(null);
+    });
+  }, (cb) => {
+    settings.get(id, 'oauth', function(data) {
+      assert.deepEqual(conf.oauth, data);
+      cb(null);
+    });
+  }, (cb) => {
+    settings.all(id, function(data) {
+      assert.deepEqual(conf, data);
+      cb(null);
+    });
+  }],
   function() {
-
-    // var app = settings.get(id, 'app');
-
-    console.log('log end of async');
     describe('node-weixin-router', function() {
       it('should be able to add order listeners', function() {
         try {
@@ -101,7 +101,6 @@ async.series([
         } catch (e) {
           assert(true, false);
         }
-
       });
 
       it('should be able to add oauth listener', function() {
@@ -146,18 +145,17 @@ async.series([
             url: 'http://www.sina.com/'
           },
           session: {
-            id: 1
+            id: id
           }
         };
         var res = {
           json: function(data) {
             assert.equal(true, data.code === errors.Success.code);
             assert.equal(true, data.message === errors.Success.message);
-            assert.equal(true, data.data.appId === app.id);
+            assert.equal(true, data.data.appId === conf1.app.id);
             done();
           }
         };
-
         handlers.jssdk.config(req1, res);
       });
 
@@ -201,11 +199,12 @@ async.series([
             done();
           }
         };
-        session.set(req1, 'oauth', {
+        settings.set(id, 'oauth', {
           state: 'state',
           scope: 0
+        }, function() {
+          handlers.oauth.access(req1, res);
         });
-        handlers.oauth.access(req1, res);
       });
 
       it('should be able to handle oauth success', function(done) {
@@ -225,8 +224,9 @@ async.series([
         settings.set(id, 'oauth', {
           state: 'state',
           scope: 0
+        }, function() {
+          handlers.oauth.success(req1, res);
         });
-        handlers.oauth.success(req1, res);
       });
 
       it('should be able to handle oauth success', function(done) {

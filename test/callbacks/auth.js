@@ -20,7 +20,6 @@ it('should test auth callback with key', function(done) {
   var auth = require('../../lib/callbacks/auth');
   var callback = auth.ack({
     send: function(data) {
-      console.log(data);
       assert.equal(true, data === errors.InputInvalid);
       done();
     }

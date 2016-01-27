@@ -31,8 +31,6 @@ settings.set(id, 'app', appConfig.app, function() {
       it('should test pay unified config', function (done) {
         var unified = pay.unified(req, {
           json: function (data) {
-            console.log(data);
-            console.log(errors.Success);
             assert.equal(true, data.code === errors.Success.code);
             assert.equal(true, data.message === errors.Success.message);
             assert.equal(true, data.data.appId === appConfig.app.id);
