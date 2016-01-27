@@ -15,7 +15,7 @@ $ npm install --save node-weixin-router
 var nodeWeixinRouter = require('node-weixin-router');
 var express = require('express');
 
-var Router = express.Router;
+var router = express.Router;
 
 //
 nodeWeixinRouter.onCreate(function () {
