@@ -15,7 +15,7 @@ var router = new Router();
 
 var req = {
   session: {
-    id: 1
+    __appId: 1
   }
 };
 
@@ -145,7 +145,7 @@ async.series([(cb) => {
             url: 'http://www.sina.com/'
           },
           session: {
-            id: id
+            __appId: id
           }
         };
         var res = {
@@ -165,7 +165,7 @@ async.series([(cb) => {
             url: 'http://www.sina.com/'
           },
           session: {
-            id: 1
+            __appId: 1
           }
         };
         var res = {
@@ -190,7 +190,7 @@ async.series([(cb) => {
             url: 'http://www.sina.com/'
           },
           session: {
-            id: 1
+            __appId: 1
           }
         };
         var res = {
@@ -211,7 +211,7 @@ async.series([(cb) => {
         var req1 = {
           query: {},
           session: {
-            id: id
+            __appId: id
           }
         };
 
@@ -235,7 +235,7 @@ async.series([(cb) => {
             code: '133'
           },
           session: {
-            id: 1
+            __appId: 1
           }
         };
 
@@ -253,7 +253,7 @@ async.series([(cb) => {
         var req1 = {
           body: {},
           session: {
-            id: 1
+            __appId: 1
           }
         };
 
@@ -292,7 +292,7 @@ async.series([(cb) => {
       it('should be able to get id by params', function() {
         var req2 = {
           params: {
-            id: 13
+            __appId: 13
           }
         };
         var id2 = wxRouter.getId(req2);
