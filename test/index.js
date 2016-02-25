@@ -7,7 +7,6 @@ import conf from './config';
 
 var errors = require('../lib/errors');
 
-
 import express from 'express';
 
 var Router = express.Router;
@@ -37,10 +36,15 @@ settings.registerAll(function(r, cb) {
   cb(conf1);
 });
 
-var id = wxRouter.getId(req);
+var id = null;
 
 var async = require('async');
 async.series([(cb) => {
+    wxRouter.getId(req, function(data) {
+      id = data;
+      cb(null);
+    });
+  }, (cb) => {
     settings.set(id, 'app', conf.app, function() {
       cb(null);
     });
@@ -175,12 +179,14 @@ async.series([(cb) => {
             done();
           }
         };
-        var id1 = wxRouter.getId(req1);
-        settings.set(id1, 'app', {}, function() {
-          var bads = nodeWeixinRouter.init(router);
+        wxRouter.getId(req1, function(id1) {
+          settings.set(id1, 'app', {}, function() {
+            var bads = nodeWeixinRouter.init(router);
 
-          bads.jssdk.config(req, res);
+            bads.jssdk.config(req, res);
+          });
         });
+
 
       });
 
@@ -289,20 +295,24 @@ async.series([(cb) => {
         callback(false, {});
       });
 
-      it('should be able to get id by params', function() {
+      it('should be able to get id by params', function(done) {
         var req2 = {
           params: {
             __appId: 13
           }
         };
-        var id2 = wxRouter.getId(req2);
-        assert.equal(true, id2 === 13);
+        wxRouter.getId(req2, function(id2) {
+          assert.equal(true, id2 === 13);
+          done();
+        });
       });
 
-      it('should be able to get id', function() {
+      it('should be able to get id', function(done) {
         var req3 = {};
-        var id3 = wxRouter.getId(req3);
-        assert.equal(true, id3 === process.env.APP_ID);
+        wxRouter.getId(req3, function(id3) {
+          assert.equal(true, id3 === process.env.APP_ID);
+          done();
+        });
       });
     });
   });
