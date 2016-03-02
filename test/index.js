@@ -99,20 +99,32 @@ async.series([(cb) => {
     describe('node-weixin-router', function() {
       it('should be able to add order listeners', function() {
         try {
-          nodeWeixinRouter.onCreate(function() {});
-          nodeWeixinRouter.onNotify(function() {});
+          nodeWeixinRouter.onOrderCreate(function() {
+
+          });
+          nodeWeixinRouter.onOrderNotify(function() {});
           assert(true, true);
         } catch (e) {
-          assert(true, false);
+          assert(false);
         }
       });
 
       it('should be able to add oauth listener', function() {
         try {
-          nodeWeixinRouter.onOauth(function() {});
+          nodeWeixinRouter.onOauthAccess(function() {});
+          nodeWeixinRouter.onOauthSuccess(function() {});
           assert(true, true);
         } catch (e) {
-          assert(true, false);
+          assert(false);
+        }
+      });
+
+      it('should be able to add oauth listener', function() {
+        try {
+          nodeWeixinRouter.onOauthSuccess(function() {});
+          assert(true, true);
+        } catch (e) {
+          assert(false);
         }
       });
 

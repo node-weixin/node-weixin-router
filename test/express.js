@@ -1,8 +1,24 @@
 import express from 'express';
 import request from 'supertest';
+import assert from 'assert';
+
 var app = express();
 import nodeWeixinRouter from '../lib';
 nodeWeixinRouter.express(app, '/aaa');
+
+nodeWeixinRouter.onOauthAccess(function(req, res) {
+  assert.equal(true, !!req);
+  assert.equal(true, !!res);
+  assert.equal(true, res.send instanceof Function);
+  assert(true);
+});
+
+nodeWeixinRouter.onOauthSuccess(function(req, data) {
+  assert.equal(true, !!req);
+  assert.equal(true, !!data);
+  assert(true);
+});
+
 
 function getTest(url) {
   it('get ' + url, function(done) {
