@@ -41,13 +41,6 @@
       2,
       "always"
     ],
-//    "space-before-function-paren": [
-//      2,
-//      {
-//        "anonymous": "never",
-//        "named": "never"
-//      }
-//    ],
     "space-in-parens": [
       2,
       "never"
