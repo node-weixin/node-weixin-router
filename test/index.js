@@ -247,6 +247,29 @@ async.series([(cb) => {
         });
       });
 
+
+      it('should be able to handle oauth success with scope 1', function(done) {
+        var req1 = {
+          query: {},
+          session: {
+            __appId: id
+          }
+        };
+
+        var res = {
+          redirect: function(url) {
+            assert.equal(true, validator.isURL(url));
+            done();
+          }
+        };
+        settings.set(id, 'oauth', {
+          state: 'state',
+          scope: 1
+        }, function() {
+          handlers.oauth.success(req1, res);
+        });
+      });
+
       it('should be able to handle oauth success', function(done) {
         var req1 = {
           query: {
