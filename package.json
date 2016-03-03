@@ -1,6 +1,6 @@
 {
   "name": "node-weixin-router",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "node weixin router for specified requests",
   "homepage": "www.node-weixin.com",
   "author": {
