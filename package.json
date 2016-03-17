@@ -47,6 +47,5 @@
     "node-weixin-api": "^0.4.3",
     "node-weixin-session": "0.0.2",
     "node-weixin-settings": "^0.2.0",
-    "validator": "^5.1.0"
   }
 }
