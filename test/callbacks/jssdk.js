@@ -1,3 +1,6 @@
+/* eslint space-before-function-paren: [2, "never"] */
+/* eslint-env es6 */
+
 var assert = require('assert');
 var errors = require('../../lib/errors');
 

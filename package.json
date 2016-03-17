@@ -1,52 +1,51 @@
 {
   "name": "node-weixin-router",
-  "version": "0.3.4",
-  "description": "node weixin router for specified requests",
-  "homepage": "www.node-weixin.com",
+  "version": "0.0.0",
+  "description": "",
+  "homepage": "",
   "author": {
     "name": "calidion",
     "email": "calidion@gmail.com",
-    "url": "blog.3gcnbeta.com"
+    "url": "calidion.github.io"
   },
   "files": [
-    "dist"
+    "lib"
   ],
-  "main": "dist/index.js",
+  "main": "lib/index.js",
   "keywords": [
-    "router"
+    ""
   ],
-  "repository": "node-weixin/node-weixin-router",
   "devDependencies": {
-    "async": "^1.5.2",
-    "babel-core": "^5.5.0",
-    "del": "^2.0.2",
-    "express": "^4.13.3",
-    "gulp": "^3.6.0",
-    "gulp-babel": "^5.1.0",
+    "eslint-config-xo-space": "^0.7.0",
+    "express": "^4.13.4",
+    "gulp": "^3.9.0",
+    "gulp-babel": "^6.1.2",
     "gulp-coveralls": "^0.1.0",
     "gulp-eslint": "^1.0.0",
     "gulp-exclude-gitignore": "^1.0.0",
-    "gulp-istanbul": "^0.9.0",
+    "gulp-istanbul": "^0.10.3",
     "gulp-mocha": "^2.0.0",
     "gulp-nsp": "^2.1.0",
     "gulp-plumber": "^1.0.0",
-    "isparta": "^3.0.3",
-    "minimist": "^1.2.0",
-    "supertest": "^1.2.0",
-    "validator": "^4.4.0"
+    "supertest": "^1.2.0"
   },
+  "eslintConfig": {
+    "extends": "xo-space",
+    "env": {
+      "mocha": true
+    }
+  },
+  "repository": "node-weixin/node-weixin-router",
   "scripts": {
     "prepublish": "gulp prepublish",
     "test": "gulp"
   },
-  "license": "MIT",
+  "license": "Apache-2.0",
   "dependencies": {
-    "async": "^1.5.2",
-    "errorable": "^0.2.0",
-    "errorable-common": "^0.0.6",
-    "node-form-validator": "^0.3.0",
-    "node-weixin-api": "^0.3.0",
+    "errorable": "^0.2.1",
+    "errorable-common": "0.0.6",
+    "node-weixin-api": "^0.4.3",
     "node-weixin-session": "0.0.2",
-    "node-weixin-settings": "^0.1.0"
+    "node-weixin-settings": "^0.2.0"
   }
 }

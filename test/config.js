@@ -11,7 +11,7 @@ var merchant = {
 
 var certificate = {
   pfx: process.env.PFX_BUFFER,
-  pfxKey: process.env.MERCHANT_ID + ''
+  pfxKey: String(process.env.MERCHANT_ID)
 };
 
 var urls = {

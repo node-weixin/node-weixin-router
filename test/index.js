@@ -1,13 +1,16 @@
-import assert from 'assert';
-import nodeWeixinRouter from '../lib';
-import validator from 'validator';
-import settings from 'node-weixin-settings';
+/* eslint space-before-function-paren: [2, "never"] */
+/* eslint-env es6 */
 
-import conf from './config';
+var assert = require('assert');
+var nodeWeixinRouter = require('../lib');
+var validator = require('validator');
+var settings = require('node-weixin-settings');
+
+var conf = require('./config');
 
 var errors = require('../lib/errors');
 
-import express from 'express';
+var express = require('express');
 
 var Router = express.Router;
 var router = new Router();
@@ -22,7 +25,6 @@ var wxRouter = require('../lib/');
 
 var conf1 = {};
 var handlers = null;
-
 
 settings.registerGet(function(r, key, cb) {
   cb(conf1[key]);
@@ -39,62 +41,77 @@ settings.registerAll(function(r, cb) {
 var id = null;
 
 var async = require('async');
-async.series([(cb) => {
+
+var functions = [
+  function(cb) {
     wxRouter.getId(req, function(data) {
       id = data;
       cb(null);
     });
-  }, (cb) => {
+  },
+  function(cb) {
     settings.set(id, 'app', conf.app, function() {
       cb(null);
     });
-  }, (cb) => {
+  },
+  function(cb) {
     settings.set(id, 'merchant', conf.merchant, function() {
       cb(null);
     });
-  }, (cb) => {
+  },
+  function(cb) {
     settings.set(id, 'certificate', conf.certificate, function() {
       cb(null);
     });
-  }, (cb) => {
+  },
+  function(cb) {
     settings.set(id, 'urls', conf.urls, function() {
       cb(null);
     });
-  }, (cb) => {
+  },
+  function(cb) {
     settings.set(id, 'oauth', conf.oauth, function() {
       cb(null);
     });
-  }, (cb) => {
+  },
+  function(cb) {
     settings.get(id, 'app', function(data) {
       assert.deepEqual(conf.app, data);
       cb(null);
     });
-  }, (cb) => {
+  },
+  function(cb) {
     settings.get(id, 'merchant', function(data) {
       assert.deepEqual(conf.merchant, data);
       cb(null);
     });
-  }, (cb) => {
+  },
+  function(cb) {
     settings.get(id, 'certificate', function(data) {
       assert.deepEqual(conf.certificate, data);
       cb(null);
     });
-  }, (cb) => {
+  },
+  function(cb) {
     settings.get(id, 'urls', function(data) {
       assert.deepEqual(conf.urls, data);
       cb(null);
     });
-  }, (cb) => {
+  },
+  function(cb) {
     settings.get(id, 'oauth', function(data) {
       assert.deepEqual(conf.oauth, data);
       cb(null);
     });
-  }, (cb) => {
+  },
+  function(cb) {
     settings.all(id, function(data) {
       assert.deepEqual(conf, data);
       cb(null);
     });
-  }],
+  }
+];
+async.series(functions,
   function() {
     describe('node-weixin-router', function() {
       it('should be able to add order listeners', function() {
@@ -129,7 +146,6 @@ async.series([(cb) => {
       });
 
       it('should be able to init', function() {
-
         handlers = nodeWeixinRouter.init(router);
         assert(true, true);
       });
@@ -153,7 +169,6 @@ async.series([(cb) => {
         };
         handlers.jssdk.config(req, res);
       });
-
 
       it('should be able to handle jssdk with url', function(done) {
         var req1 = {
@@ -198,8 +213,6 @@ async.series([(cb) => {
             bads.jssdk.config(req, res);
           });
         });
-
-
       });
 
       it('should be able to handle oauth access', function(done) {
@@ -247,7 +260,6 @@ async.series([(cb) => {
         });
       });
 
-
       it('should be able to handle oauth success with scope 1', function(done) {
         var req1 = {
           query: {},
@@ -289,7 +301,6 @@ async.series([(cb) => {
         handlers.oauth.success(req1, res);
       });
 
-
       it('should be able to handle pay back', function() {
         var req1 = {
           body: {},
@@ -305,7 +316,6 @@ async.series([(cb) => {
         };
         handlers.pay.callback(req1, res);
       });
-
 
       it('should be able to handle pay init', function() {
         var res = {

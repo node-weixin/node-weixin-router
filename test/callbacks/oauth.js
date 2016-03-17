@@ -1,10 +1,13 @@
+/* eslint space-before-function-paren: [2, "never"] */
+/* eslint-env es6 */
+
 var assert = require('assert');
 var validator = require('validator');
-import settings from 'node-weixin-settings';
+var settings = require('node-weixin-settings');
 
-import callbacks from '../../lib/callbacks';
+var callbacks = require('../../lib/callbacks');
 
-import conf from '../config';
+var conf = require('../config');
 
 var req = {
   session: {
@@ -49,7 +52,7 @@ settings.set(req.session.id, 'urls', conf.urls, function() {
       assert.deepEqual(request, req);
       assert.deepEqual(response, res);
       assert.equal(true, wx.openid === json.openid);
-      /*eslint camelcase: [2, {properties: "never"}]*/
+      /* eslint camelcase: [2, {properties: "never"}] */
       assert.equal(true, wx.accessToken === json.access_token);
       assert.equal(true, wx.refreshToken === json.refresh_token);
       done();

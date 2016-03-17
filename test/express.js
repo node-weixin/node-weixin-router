@@ -1,29 +1,31 @@
-import express from 'express';
-import request from 'supertest';
-import assert from 'assert';
+/* eslint space-before-function-paren: [2, "never"] */
+/* eslint-env es6 */
+
+var express = require('express');
+var request = require('supertest');
+var assert = require('assert');
 
 var app = express();
-import nodeWeixinRouter from '../lib';
+var nodeWeixinRouter = require('../lib');
 nodeWeixinRouter.express(app, '/aaa');
 
 nodeWeixinRouter.onOauthAccess(function(req, res) {
-  assert.equal(true, !!req);
-  assert.equal(true, !!res);
+  assert.equal(true, req !== null);
+  assert.equal(true, res !== null);
   assert.equal(true, res.send instanceof Function);
   assert(true);
 });
 
 nodeWeixinRouter.onOauthSuccess(function(req, data) {
-  assert.equal(true, !!req);
-  assert.equal(true, !!data);
+  assert.equal(true, req !== null);
+  assert.equal(true, data !== null);
   assert(true);
 });
 
-
 function getTest(url) {
   it('get ' + url, function(done) {
-    request(app).
-    get(url)
+    request(app)
+    .get(url)
     .expect(200)
     .end(function() {
       done();
@@ -33,8 +35,8 @@ function getTest(url) {
 
 function postTest(url) {
   it('post ' + url, function(done) {
-    request(app).
-    post(url)
+    request(app)
+    .post(url)
     .expect(200)
     .end(function() {
       done();

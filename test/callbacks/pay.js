@@ -1,3 +1,6 @@
+/* eslint space-before-function-paren: [2, "never"] */
+/* eslint-env es6 */
+
 var assert = require('assert');
 var pay = require('../../lib/callbacks/pay');
 var appConfig = require('../config');
@@ -14,21 +17,20 @@ var req = {
 var settings = require('node-weixin-settings');
 
 router.getId(req, function(id) {
-
   settings.set(id, 'app', appConfig.app, function() {
     settings.set(id, 'merchant', appConfig.merchant, function() {
       settings.set(id, 'certificate', appConfig.certificate, function() {
-
-        it('should test pay callback', function(done) {
+        var cb = function(done) {
           var callback = pay.callback({
             end: function() {
               done();
             }
           });
           callback(true, {});
-        });
+        };
+        it('should test pay callback', cb);
 
-        it('should test pay unified config', function(done) {
+        var cb1 = function(done) {
           var unified = pay.unified(req, {
             json: function(data) {
               assert.equal(true, data.code === errors.Success.code);
@@ -38,12 +40,12 @@ router.getId(req, function(id) {
             }
           });
           unified(false, {
-            /*eslint camelcase: [2, {properties: "never"}]*/
+            /* eslint camelcase: [2, {properties: "never"}] */
             prepay_id: 'sdfsf'
           });
-        });
+        };
+        it('should test pay unified config', cb1);
       });
-
     });
   });
 });
