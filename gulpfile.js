@@ -1,3 +1,4 @@
+'use strict';
 var path = require('path');
 var gulp = require('gulp');
 var eslint = require('gulp-eslint');
@@ -7,15 +8,6 @@ var istanbul = require('gulp-istanbul');
 var nsp = require('gulp-nsp');
 var plumber = require('gulp-plumber');
 var coveralls = require('gulp-coveralls');
-var babel = require('gulp-babel');
-var del = require('del');
-var isparta = require('isparta');
-var fs = require('fs');
-var minimist = require('minimist');
-
-// Initialize the babel transpiler so ES2015 files gets compiled
-// when they're loaded
-require('babel-core/register');
 
 gulp.task('static', function () {
   return gulp.src('**/*.js')
@@ -26,16 +18,14 @@ gulp.task('static', function () {
 });
 
 gulp.task('nsp', function (cb) {
-  nsp({
-    package: path.resolve('package.json')
-  }, cb);
+  nsp({package: path.resolve('package.json')}, cb);
 });
 
 gulp.task('pre-test', function () {
   return gulp.src('lib/**/*.js')
+    .pipe(excludeGitignore())
     .pipe(istanbul({
-      includeUntested: true,
-      instrumenter: isparta.Instrumenter
+      includeUntested: true
     }))
     .pipe(istanbul.hookRequire());
 });
@@ -43,22 +33,9 @@ gulp.task('pre-test', function () {
 gulp.task('test', ['pre-test'], function (cb) {
   var mochaErr;
 
-  var optFile = path.resolve(__dirname, 'test/mocha.opts');
-
-  var options = {
-    reporter: 'spec'
-  };
-  if (fs.existsSync(optFile)) {
-    var text = String(fs.readFileSync(optFile));
-    text = text.replace(/\n/g, ' ');
-    var opt = minimist(text.split(' '));
-    delete opt._;
-    options = opt;
-  }
-
   gulp.src('test/**/*.js')
     .pipe(plumber())
-    .pipe(mocha(options))
+    .pipe(mocha({reporter: 'spec', timeout: 10000}))
     .on('error', function (err) {
       mochaErr = err;
       throw err;
@@ -67,6 +44,10 @@ gulp.task('test', ['pre-test'], function (cb) {
     .on('end', function () {
       cb(mochaErr);
     });
+});
+
+gulp.task('watch', function () {
+  gulp.watch(['lib/**/*.js', 'test/**'], ['test']);
 });
 
 gulp.task('coveralls', ['test'], function () {
@@ -78,15 +59,5 @@ gulp.task('coveralls', ['test'], function () {
     .pipe(coveralls());
 });
 
-gulp.task('babel', ['clean'], function () {
-  return gulp.src('lib/**/*.js')
-    .pipe(babel())
-    .pipe(gulp.dest('dist'));
-});
-
-gulp.task('clean', function () {
-  return del('dist');
-});
-
-gulp.task('prepublish', ['babel']);
+gulp.task('prepublish', ['nsp']);
 gulp.task('default', ['static', 'test', 'coveralls']);
