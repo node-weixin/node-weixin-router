@@ -60,4 +60,51 @@ settings.set(req.session.id, 'urls', conf.urls, function() {
     var callback = oauth.success(req, res);
     callback(false, json);
   });
+
+  it('should set oauth', function(done) {
+    settings.set(req.session.id, 'oauth', {
+      state: 'STATE',
+      scope: 1
+    }, function() {
+      done();
+    });
+  });
+
+  it('should test oauth callback success', function(done) {
+    var oauth = require('../../lib/callbacks/oauth');
+    var json = {
+      openid: 'openid',
+      access_token: 'access_token',
+      refresh_token: 'refresh_token'
+    };
+    var res = {
+      df: 'sdfsf'
+    };
+    callbacks.oauth.success = function(request, response) {
+      assert.deepEqual(request, req);
+      assert.deepEqual(response, res);
+      done();
+    };
+    var callback = oauth.success(req, res);
+    callback(false, json);
+  });
+
+  it('should test oauth onProfile success', function(done) {
+    var oauth = require('../../lib/callbacks/oauth');
+    var user = {
+      openid: 'openid',
+      access_token: 'access_token',
+      refresh_token: 'refresh_token'
+    };
+    var res = {
+      df: 'sdfsf',
+      redirect: function(url) {
+        assert.equal(url, conf.urls.oauth.access);
+        done();
+      }
+    };
+    var onSuccess = oauth.onProfile(req, res, conf.urls);
+
+    onSuccess(true, user);
+  });
 });
