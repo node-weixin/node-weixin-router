@@ -9,6 +9,15 @@ var app = express();
 var nodeWeixinRouter = require('../lib');
 nodeWeixinRouter.express(app, '/aaa');
 
+nodeWeixinRouter.onOrderNotify(function(error, data, res) {
+  assert.equal(true, typeof error !== 'undefined');
+  assert(typeof data !== 'undefined');
+  if (res && res.end instanceof Function) {
+    // 仅为测试添加， 真正的场景下，一定要记得不要使用res与res.end
+    res.end();
+  }
+});
+
 nodeWeixinRouter.onOauthAccess(function(req, res) {
   assert.equal(true, req !== null);
   assert.equal(true, res !== null);
@@ -25,22 +34,22 @@ nodeWeixinRouter.onOauthSuccess(function(req, data) {
 function getTest(url) {
   it('get ' + url, function(done) {
     request(app)
-    .get(url)
-    .expect(200)
-    .end(function() {
-      done();
-    });
+      .get(url)
+      .expect(200)
+      .end(function() {
+        done();
+      });
   });
 }
 
 function postTest(url) {
   it('post ' + url, function(done) {
     request(app)
-    .post(url)
-    .expect(200)
-    .end(function() {
-      done();
-    });
+      .post(url)
+      .expect(200)
+      .end(function() {
+        done();
+      });
   });
 }
 

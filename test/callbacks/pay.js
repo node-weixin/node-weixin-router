@@ -20,13 +20,10 @@ router.getId(req, function(id) {
   settings.set(id, 'app', appConfig.app, function() {
     settings.set(id, 'merchant', appConfig.merchant, function() {
       settings.set(id, 'certificate', appConfig.certificate, function() {
-        var cb = function(done) {
-          var callback = pay.callback({
-            end: function() {
-              done();
-            }
-          });
+        var cb = function() {
+          var callback = pay.callback();
           callback(true, {});
+          assert(true);
         };
         it('should test pay callback', cb);
 
