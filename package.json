@@ -1,6 +1,6 @@
 {
   "name": "node-weixin-router",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "",
   "homepage": "",
   "author": {
@@ -44,7 +44,7 @@
   "dependencies": {
     "errorable": "^0.2.1",
     "errorable-common": "0.0.6",
-    "node-weixin-api": "^0.4.3",
+    "node-weixin-api": "^0.4.6",
     "node-weixin-session": "0.0.2",
     "node-weixin-settings": "^0.2.0"
   }
