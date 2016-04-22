@@ -3,6 +3,7 @@
 
 var assert = require('assert');
 var validator = require('validator');
+var session = require('node-weixin-session');
 var settings = require('node-weixin-settings');
 
 var callbacks = require('../../lib/callbacks');
@@ -18,7 +19,7 @@ var req = {
 settings.set(req.session.id, 'urls', conf.urls, function() {
   it('should test oauth callback success', function(done) {
     var oauth = require('../../lib/callbacks/oauth');
-    var callback = oauth.success(req, {
+    var callback = oauth.success(settings, session, req, {
       redirect: function(url) {
         assert.equal(true, validator.isURL(url));
         done();
@@ -29,7 +30,7 @@ settings.set(req.session.id, 'urls', conf.urls, function() {
 
   it('should test oauth callback success', function(done) {
     var oauth = require('../../lib/callbacks/oauth');
-    var callback = oauth.success(req, {
+    var callback = oauth.success(settings, session, req, {
       redirect: function(url) {
         assert.equal(true, validator.isURL(url));
         done();
@@ -57,7 +58,7 @@ settings.set(req.session.id, 'urls', conf.urls, function() {
       assert.equal(true, wx.refreshToken === json.refresh_token);
       done();
     };
-    var callback = oauth.success(req, res);
+    var callback = oauth.success(settings, session, req, res);
     callback(false, json);
   });
 
@@ -85,7 +86,7 @@ settings.set(req.session.id, 'urls', conf.urls, function() {
       assert.deepEqual(response, res);
       done();
     };
-    var callback = oauth.success(req, res);
+    var callback = oauth.success(settings, session, req, res);
     callback(false, json);
   });
 
@@ -103,7 +104,7 @@ settings.set(req.session.id, 'urls', conf.urls, function() {
         done();
       }
     };
-    var onSuccess = oauth.onProfile(req, res, conf.urls);
+    var onSuccess = oauth.onProfile(session, req, res, conf.urls);
 
     onSuccess(true, user);
   });

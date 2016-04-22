@@ -1,6 +1,6 @@
 {
   "name": "node-weixin-router",
-  "version": "0.4.4",
+  "version": "0.5.0",
   "description": "",
   "homepage": "",
   "author": {
@@ -17,11 +17,11 @@
   ],
   "devDependencies": {
     "del": "^2.2.0",
-    "eslint-config-xo-space": "^0.7.0",
+    "eslint-config-xo-space": "^0.12.0",
     "express": "^4.13.4",
     "gulp": "^3.9.0",
     "gulp-coveralls": "^0.1.0",
-    "gulp-eslint": "^1.0.0",
+    "gulp-eslint": "^2.0.0",
     "gulp-exclude-gitignore": "^1.0.0",
     "gulp-istanbul": "^0.10.3",
     "gulp-mocha": "^2.0.0",
@@ -42,9 +42,9 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "errorable": "^0.2.1",
-    "errorable-common": "0.0.6",
-    "node-weixin-api": "^0.4.6",
+    "errorable": "^0.3.1",
+    "errorable-common": "0.0.7",
+    "node-weixin-api": "^0.5.0",
     "node-weixin-session": "0.0.2",
     "node-weixin-settings": "^0.2.0"
   }

@@ -5,6 +5,7 @@ var assert = require('assert');
 var nodeWeixinRouter = require('../lib');
 var validator = require('validator');
 var settings = require('node-weixin-settings');
+var session = require('node-weixin-session');
 
 var conf = require('./config');
 
@@ -45,6 +46,7 @@ var async = require('async');
 var functions = [
   function(cb) {
     wxRouter.getId(req, function(data) {
+      console.log(data);
       id = data;
       cb(null);
     });
@@ -146,7 +148,7 @@ async.series(functions,
       });
 
       it('should be able to init', function() {
-        handlers = nodeWeixinRouter.init(router);
+        handlers = nodeWeixinRouter.init(settings, session, router);
         assert(true, true);
       });
 
@@ -156,18 +158,18 @@ async.series(functions,
             done();
           }
         };
-        handlers.auth.ack(req, res);
+        handlers.auth.ack(settings, session)(req, res);
       });
 
       it('should be able to handle jssdk without data', function(done) {
         var res = {
           json: function(data) {
-            assert.equal(true, data.code === errors.Error.code);
-            assert.equal(true, data.message === errors.Error.message);
+            assert.equal(true, data.code === errors.Failure.code);
+            assert.equal(true, data.message === errors.Failure.message);
             done();
           }
         };
-        handlers.jssdk.config(req, res);
+        handlers.jssdk.config(settings, session)(req, res);
       });
 
       it('should be able to handle jssdk with url', function(done) {
@@ -187,7 +189,7 @@ async.series(functions,
             done();
           }
         };
-        handlers.jssdk.config(req1, res);
+        handlers.jssdk.config(settings, session)(req1, res);
       });
 
       it('should be able to handle jssdk with bad app info', function(done) {
@@ -201,16 +203,16 @@ async.series(functions,
         };
         var res = {
           json: function(data) {
-            assert.equal(true, data.code === errors.Error.code);
-            assert.equal(true, data.message === errors.Error.message);
+            assert.equal(true, data.code === errors.Failure.code);
+            assert.equal(true, data.message === errors.Failure.message);
             done();
           }
         };
         wxRouter.getId(req1, function(id1) {
           settings.set(id1, 'app', {}, function() {
-            var bads = nodeWeixinRouter.init(router);
+            var bads = nodeWeixinRouter.init(settings, session, router);
 
-            bads.jssdk.config(req, res);
+            bads.jssdk.config(settings, session)(req, res);
           });
         });
       });
@@ -234,7 +236,7 @@ async.series(functions,
           state: 'state',
           scope: 0
         }, function() {
-          handlers.oauth.access(req1, res);
+          handlers.oauth.access(settings, session)(req1, res);
         });
       });
 
@@ -256,7 +258,7 @@ async.series(functions,
           state: 'state',
           scope: 0
         }, function() {
-          handlers.oauth.success(req1, res);
+          handlers.oauth.success(settings, session)(req1, res);
         });
       });
 
@@ -278,11 +280,11 @@ async.series(functions,
           state: 'state',
           scope: 1
         }, function() {
-          handlers.oauth.success(req1, res);
+          handlers.oauth.success(settings, session)(req1, res);
         });
       });
 
-      it('should be able to handle oauth success', function(done) {
+      it('should be able to handle oauth success 1', function(done) {
         var req1 = {
           query: {
             code: '133'
@@ -298,7 +300,7 @@ async.series(functions,
             done();
           }
         };
-        handlers.oauth.success(req1, res);
+        handlers.oauth.success(settings, session)(req1, res);
       });
 
       it('should be able to handle pay back', function() {
@@ -314,21 +316,21 @@ async.series(functions,
 
           }
         };
-        handlers.pay.callback(req1, res);
+        handlers.pay.callback(settings, session)(req1, res);
       });
 
       it('should be able to handle pay init', function() {
         var res = {
           json: function() {}
         };
-        handlers.pay.init(req, res);
+        handlers.pay.init(settings, session)(req, res);
       });
 
       it('should be able to handle pay _unified failed', function() {
         var res = {
           json: function() {}
         };
-        var callback = handlers.pay._unified(req, res);
+        var callback = handlers.pay._unified(settings, req, res);
         callback(true, {});
       });
 
@@ -336,7 +338,7 @@ async.series(functions,
         var res = {
           json: function() {}
         };
-        var callback = handlers.pay._unified(req, res);
+        var callback = handlers.pay._unified(settings, req, res);
         callback(false, {});
       });
 

@@ -4,10 +4,12 @@
 var express = require('express');
 var request = require('supertest');
 var assert = require('assert');
+var session = require('node-weixin-session');
+var settings = require('node-weixin-settings');
 
 var app = express();
 var nodeWeixinRouter = require('../lib');
-nodeWeixinRouter.express(app, '/aaa');
+nodeWeixinRouter.express(settings, session, app, '/aaa');
 
 nodeWeixinRouter.onOrderNotify(function(error, data, res) {
   assert.equal(true, typeof error !== 'undefined');

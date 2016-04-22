@@ -28,7 +28,7 @@ router.getId(req, function(id) {
         it('should test pay callback', cb);
 
         var cb1 = function(done) {
-          var unified = pay.unified(req, {
+          var unified = pay.unified(settings, req, {
             json: function(data) {
               assert.equal(true, data.code === errors.Success.code);
               assert.equal(true, data.message === errors.Success.message);
