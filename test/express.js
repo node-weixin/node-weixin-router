@@ -44,6 +44,17 @@ function getTest(url) {
   });
 }
 
+function getNotFoundTest(url) {
+  it('get ' + url, function(done) {
+    request(app)
+      .get(url)
+      .expect(404)
+      .end(function() {
+        done();
+      });
+  });
+}
+
 function postTest(url) {
   it('post ' + url, function(done) {
     request(app)
@@ -75,5 +86,6 @@ describe('express', function() {
   describe('pay', function() {
     myTest('/aaa/pay/callback');
     myTest('/aaa/pay/unified');
+    getNotFoundTest('/aaa/pay/_unified');
   });
 });
