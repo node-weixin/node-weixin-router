@@ -47,6 +47,6 @@
     "errorable-common": "0.0.7",
     "node-weixin-api": "^0.5.0",
     "node-weixin-session": "0.0.2",
-    "node-weixin-settings": "^0.2.0"
+    "node-weixin-settings": "^0.2.1"
   }
 }
