@@ -1,5 +1,3 @@
-/* eslint space-before-function-paren: [2, "never"] */
-/* eslint-env es6 */
 
 var assert = require('assert');
 var nodeWeixinRouter = require('../lib');
@@ -18,7 +16,7 @@ var router = new Router();
 
 var req = {
   session: {
-    __appId: 1
+    id: 1
   }
 };
 
@@ -27,15 +25,15 @@ var wxRouter = require('../lib/');
 var conf1 = {};
 var handlers = null;
 
-settings.registerGet(function(r, key, cb) {
+settings.registerGet(function (r, key, cb) {
   cb(conf1[key]);
 });
 
-settings.registerSet(function(r, key, value, cb) {
+settings.registerSet(function (r, key, value, cb) {
   conf1[key] = value;
   cb();
 });
-settings.registerAll(function(r, cb) {
+settings.registerAll(function (r, cb) {
   cb(conf1);
 });
 
@@ -44,126 +42,172 @@ var id = null;
 var async = require('async');
 
 var functions = [
-  function(cb) {
-    wxRouter.getId(req, function(data) {
+  function (cb) {
+    wxRouter.getId(req, function (data) {
       console.log(data);
       id = data;
       cb(null);
     });
   },
-  function(cb) {
-    settings.set(id, 'app', conf.app, function() {
+  function (cb) {
+    settings.set(id, 'app', conf.app, function () {
       cb(null);
     });
   },
-  function(cb) {
-    settings.set(id, 'merchant', conf.merchant, function() {
+  function (cb) {
+    settings.set(id, 'merchant', conf.merchant, function () {
       cb(null);
     });
   },
-  function(cb) {
-    settings.set(id, 'certificate', conf.certificate, function() {
+  function (cb) {
+    settings.set(id, 'certificate', conf.certificate, function () {
       cb(null);
     });
   },
-  function(cb) {
-    settings.set(id, 'urls', conf.urls, function() {
+  function (cb) {
+    settings.set(id, 'urls', conf.urls, function () {
       cb(null);
     });
   },
-  function(cb) {
-    settings.set(id, 'oauth', conf.oauth, function() {
+  function (cb) {
+    settings.set(id, 'oauth', conf.oauth, function () {
       cb(null);
     });
   },
-  function(cb) {
-    settings.get(id, 'app', function(data) {
+  function (cb) {
+    settings.get(id, 'app', function (data) {
       assert.deepEqual(conf.app, data);
       cb(null);
     });
   },
-  function(cb) {
-    settings.get(id, 'merchant', function(data) {
+  function (cb) {
+    settings.get(id, 'merchant', function (data) {
       assert.deepEqual(conf.merchant, data);
       cb(null);
     });
   },
-  function(cb) {
-    settings.get(id, 'certificate', function(data) {
+  function (cb) {
+    settings.get(id, 'certificate', function (data) {
       assert.deepEqual(conf.certificate, data);
       cb(null);
     });
   },
-  function(cb) {
-    settings.get(id, 'urls', function(data) {
+  function (cb) {
+    settings.get(id, 'urls', function (data) {
       assert.deepEqual(conf.urls, data);
       cb(null);
     });
   },
-  function(cb) {
-    settings.get(id, 'oauth', function(data) {
+  function (cb) {
+    settings.get(id, 'oauth', function (data) {
       assert.deepEqual(conf.oauth, data);
       cb(null);
     });
   },
-  function(cb) {
-    settings.all(id, function(data) {
+  function (cb) {
+    settings.all(id, function (data) {
       assert.deepEqual(conf, data);
       cb(null);
     });
   }
 ];
 async.series(functions,
-  function() {
-    describe('node-weixin-router', function() {
-      it('should be able to add order listeners', function() {
+  function () {
+    describe('node-weixin-router', function () {
+      it('should be able to add order listeners', function () {
         try {
-          nodeWeixinRouter.onOrderCreate(function() {
+          nodeWeixinRouter.onOrderCreate(function () {
 
           });
-          nodeWeixinRouter.onOrderNotify(function() {});
+          nodeWeixinRouter.onOrderNotify(function () { });
           assert(true, true);
         } catch (e) {
           assert(false);
         }
       });
 
-      it('should be able to add oauth listener', function() {
+      it('should be able to add oauth listener', function () {
         try {
-          nodeWeixinRouter.onOauthAccess(function() {});
-          nodeWeixinRouter.onOauthSuccess(function() {});
+          nodeWeixinRouter.onOauthAccess(function () { });
+          nodeWeixinRouter.onOauthSuccess(function () { });
           assert(true, true);
         } catch (e) {
           assert(false);
         }
       });
 
-      it('should be able to add oauth listener', function() {
+      it('should be able to add oauth listener', function () {
         try {
-          nodeWeixinRouter.onOauthSuccess(function() {});
+          nodeWeixinRouter.onOauthSuccess(function () { });
           assert(true, true);
         } catch (e) {
           assert(false);
         }
       });
 
-      it('should be able to init', function() {
+      it('should be able to init', function () {
         handlers = nodeWeixinRouter.init(settings, session, router);
         assert(true, true);
       });
 
-      it('should be able to handle auth', function(done) {
+      it('should be able to handle auth ack', function (done) {
+        req.query = {};
         var res = {
-          send: function() {
+          send: function () {
             done();
           }
         };
         handlers.auth.ack(settings, session)(req, res);
       });
 
-      it('should be able to handle jssdk without data', function(done) {
+      it('should be able to handle auth message', function (done) {
+        nodeWeixinRouter.onAuthMessage(function (message) {
+          assert.deepEqual(message, {
+            ToUserName: 'toUser',
+            FromUserName: 'fromUser',
+            CreateTime: '1348831860',
+            MsgType: 'image',
+            PicUrl: 'this is a url',
+            MediaId: 'media_id',
+            MsgId: '1234567890123456'
+          });
+        });
+
+        req.body = '<xml><ToUserName><![CDATA[toUser]]></ToUserName><FromUserName><![CDATA[fromUser]]></FromUserName><CreateTime>1348831860</CreateTime><MsgType><![CDATA[image]]></MsgType><PicUrl><![CDATA[this is a url]]></PicUrl><MediaId><![CDATA[media_id]]></MediaId><MsgId>1234567890123456</MsgId></xml>';
+
         var res = {
-          json: function(data) {
+          send: function () {
+            done();
+          }
+        };
+        handlers.auth.ack(settings, session)(req, res);
+      });
+
+      it('should be able to handle auth events', function (done) {
+        nodeWeixinRouter.onAuthEvent(function (message) {
+          assert.deepEqual(message, {
+            ToUserName: 'toUser',
+            FromUserName: 'fromUser',
+            CreateTime: '123456789',
+            MsgType: 'event',
+            Event: 'subscribe'
+          }
+          );
+        });
+
+        req.body = '<xml><ToUserName><![CDATA[toUser]]></ToUserName><FromUserName><![CDATA[fromUser]]></FromUserName><CreateTime>123456789</CreateTime><MsgType><![CDATA[event]]></MsgType><Event><![CDATA[subscribe]]></Event></xml>';
+
+        var res = {
+          send: function () {
+            done();
+          }
+        };
+        handlers.auth.ack(settings, session)(req, res);
+      });
+
+      it('should be able to handle jssdk without data', function (done) {
+        var res = {
+          json: function (data) {
             assert.equal(true, data.code === errors.Failure.code);
             assert.equal(true, data.message === errors.Failure.message);
             done();
@@ -172,17 +216,17 @@ async.series(functions,
         handlers.jssdk.config(settings, session)(req, res);
       });
 
-      it('should be able to handle jssdk with url', function(done) {
+      it('should be able to handle jssdk with url', function (done) {
         var req1 = {
           query: {
             url: 'http://www.sina.com/'
           },
           session: {
-            __appId: id
+            id: id
           }
         };
         var res = {
-          json: function(data) {
+          json: function (data) {
             assert.equal(true, data.code === errors.Success.code);
             assert.equal(true, data.message === errors.Success.message);
             assert.equal(true, data.data.appId === conf1.app.id);
@@ -192,24 +236,24 @@ async.series(functions,
         handlers.jssdk.config(settings, session)(req1, res);
       });
 
-      it('should be able to handle jssdk with bad app info', function(done) {
+      it('should be able to handle jssdk with bad app info', function (done) {
         var req1 = {
           query: {
             url: 'http://www.sina.com/'
           },
           session: {
-            __appId: 1
+            id: 1
           }
         };
         var res = {
-          json: function(data) {
+          json: function (data) {
             assert.equal(true, data.code === errors.Failure.code);
             assert.equal(true, data.message === errors.Failure.message);
             done();
           }
         };
-        wxRouter.getId(req1, function(id1) {
-          settings.set(id1, 'app', {}, function() {
+        wxRouter.getId(req1, function (id1) {
+          settings.set(id1, 'app', {}, function () {
             var bads = nodeWeixinRouter.init(settings, session, router);
 
             bads.jssdk.config(settings, session)(req, res);
@@ -217,17 +261,17 @@ async.series(functions,
         });
       });
 
-      it('should be able to handle oauth access', function(done) {
+      it('should be able to handle oauth access', function (done) {
         var req1 = {
           query: {
             url: 'http://www.sina.com/'
           },
           session: {
-            __appId: 1
+            id: 1
           }
         };
         var res = {
-          redirect: function(url) {
+          redirect: function (url) {
             assert.equal(true, validator.isURL(url));
             done();
           }
@@ -235,21 +279,21 @@ async.series(functions,
         settings.set(id, 'oauth', {
           state: 'state',
           scope: 0
-        }, function() {
+        }, function () {
           handlers.oauth.access(settings, session)(req1, res);
         });
       });
 
-      it('should be able to handle oauth success', function(done) {
+      it('should be able to handle oauth success', function (done) {
         var req1 = {
           query: {},
           session: {
-            __appId: id
+            id: id
           }
         };
 
         var res = {
-          redirect: function(url) {
+          redirect: function (url) {
             assert.equal(true, validator.isURL(url));
             done();
           }
@@ -257,21 +301,21 @@ async.series(functions,
         settings.set(id, 'oauth', {
           state: 'state',
           scope: 0
-        }, function() {
+        }, function () {
           handlers.oauth.success(settings, session)(req1, res);
         });
       });
 
-      it('should be able to handle oauth success with scope 1', function(done) {
+      it('should be able to handle oauth success with scope 1', function (done) {
         var req1 = {
           query: {},
           session: {
-            __appId: id
+            id: id
           }
         };
 
         var res = {
-          redirect: function(url) {
+          redirect: function (url) {
             assert.equal(true, validator.isURL(url));
             done();
           }
@@ -279,23 +323,23 @@ async.series(functions,
         settings.set(id, 'oauth', {
           state: 'state',
           scope: 1
-        }, function() {
+        }, function () {
           handlers.oauth.success(settings, session)(req1, res);
         });
       });
 
-      it('should be able to handle oauth success 1', function(done) {
+      it('should be able to handle oauth success 1', function (done) {
         var req1 = {
           query: {
             code: '133'
           },
           session: {
-            __appId: 1
+            id: 1
           }
         };
 
         var res = {
-          redirect: function(url) {
+          redirect: function (url) {
             assert.equal(true, validator.isURL(url));
             done();
           }
@@ -303,60 +347,60 @@ async.series(functions,
         handlers.oauth.success(settings, session)(req1, res);
       });
 
-      it('should be able to handle pay back', function() {
+      it('should be able to handle pay back', function () {
         var req1 = {
           body: {},
           session: {
-            __appId: 1
+            id: 1
           }
         };
 
         var res = {
-          end: function() {
+          end: function () {
 
           }
         };
         handlers.pay.callback(settings, session)(req1, res);
       });
 
-      it('should be able to handle pay init', function() {
+      it('should be able to handle pay init', function () {
         var res = {
-          json: function() {}
+          json: function () { }
         };
         handlers.pay.init(settings, session)(req, res);
       });
 
-      it('should be able to handle pay _unified failed', function() {
+      it('should be able to handle pay _unified failed', function () {
         var res = {
-          json: function() {}
+          json: function () { }
         };
         var callback = handlers.pay._unified(settings, req, res);
         callback(true, {});
       });
 
-      it('should be able to handle pay _unified success', function() {
+      it('should be able to handle pay _unified success', function () {
         var res = {
-          json: function() {}
+          json: function () { }
         };
         var callback = handlers.pay._unified(settings, req, res);
         callback(false, {});
       });
 
-      it('should be able to get id by params', function(done) {
+      it('should be able to get id by params', function (done) {
         var req2 = {
           params: {
-            __appId: 13
+            id: 13
           }
         };
-        wxRouter.getId(req2, function(id2) {
+        wxRouter.getId(req2, function (id2) {
           assert.equal(true, id2 === 13);
           done();
         });
       });
 
-      it('should be able to get id', function(done) {
+      it('should be able to get id', function (done) {
         var req3 = {};
-        wxRouter.getId(req3, function(id3) {
+        wxRouter.getId(req3, function (id3) {
           assert.equal(true, id3 === process.env.APP_ID);
           done();
         });
