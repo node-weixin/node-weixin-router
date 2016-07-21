@@ -1,6 +1,6 @@
 {
   "name": "node-weixin-router",
-  "version": "0.6.0",
+  "version": "0.5.4",
   "description": "",
   "homepage": "",
   "author": {
@@ -47,6 +47,7 @@
     "errorable-common": "^0.1.0",
     "node-weixin-api": "^0.5.0",
     "node-weixin-session": "0.0.2",
-    "node-weixin-settings": "^0.2.1"
+    "node-weixin-settings": "^0.2.1",
+    "validator": "^5.5.0"
   }
 }
