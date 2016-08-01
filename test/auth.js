@@ -66,7 +66,7 @@ it('should handle auth with req.body', function () {
   var auth = require('../lib/handlers/auth');
   var callback = auth.ack();
   callback({
-    body: ''
+    body: new Buffer('')
   },
     {
       send: function () {
@@ -78,14 +78,14 @@ it('should handle auth with req.body', function () {
   var auth = require('../lib/handlers/auth');
   var callback = auth.ack();
   callback({
-    body: '<xml>' +
+    body: new Buffer('<xml>' +
     '<ToUserName><![CDATA[toUser]]></ToUserName>' +
     '<FromUserName><![CDATA[fromUser]]></FromUserName>' +
     '<CreateTime>1348831860</CreateTime>' +
     '<MsgType><![CDATA[text]]></MsgType>' +
     '<Content><![CDATA[this is a test]]></Content>' +
     '<MsgId>1234567890123456</MsgId>' +
-    '</xml>'
+    '</xml>')
   },
     {
       send: function () {
@@ -104,14 +104,14 @@ it('should handle auth with req.body', function () {
   };
   var callback = auth.ack();
   callback({
-    body: '<xml>' +
+    body: new Buffer('<xml>' +
     '<ToUserName><![CDATA[toUser]]></ToUserName>' +
     '<FromUserName><![CDATA[fromUser]]></FromUserName>' +
     '<CreateTime>1348831860</CreateTime>' +
     '<MsgType><![CDATA[text]]></MsgType>' +
     '<Content><![CDATA[this is a test]]></Content>' +
     '<MsgId>1234567890123456</MsgId>' +
-    '</xml>'
+    '</xml>')
   },
     {
       send: function () {
