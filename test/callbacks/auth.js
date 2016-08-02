@@ -1,13 +1,10 @@
-/* eslint space-before-function-paren: [2, "never"] */
-/* eslint-env es6 */
-
 var assert = require('assert');
 var errors = require('../../lib/errors');
 
-it('should test auth callback success', function(done) {
+it('should test auth callback success', function (done) {
   var auth = require('../../lib/callbacks/auth');
-  var callback = auth.ack({
-    send: function(data) {
+  var callback = auth.ack({}, {
+    send: function (data) {
       assert.equal(true, data.code === 0);
       assert.equal(true, data.message === '成功!');
       done();
@@ -19,10 +16,10 @@ it('should test auth callback success', function(done) {
   });
 });
 
-it('should test auth callback with key', function(done) {
+it('should test auth callback with key', function (done) {
   var auth = require('../../lib/callbacks/auth');
-  var callback = auth.ack({
-    send: function(data) {
+  var callback = auth.ack({}, {
+    send: function (data) {
       assert.equal(true, data === errors.InputInvalid);
       done();
     }
@@ -32,10 +29,10 @@ it('should test auth callback with key', function(done) {
   });
 });
 
-it('should test auth callback with signature not match', function(done) {
+it('should test auth callback with signature not match', function (done) {
   var auth = require('../../lib/callbacks/auth');
-  var callback = auth.ack({
-    send: function(data) {
+  var callback = auth.ack({}, {
+    send: function (data) {
       assert.equal(true, data === errors.SignatureNotMatch);
       done();
     }
@@ -43,10 +40,10 @@ it('should test auth callback with signature not match', function(done) {
   callback(true, 2);
 });
 
-it('should test auth callback with unkown error', function(done) {
+it('should test auth callback with unkown error', function (done) {
   var auth = require('../../lib/callbacks/auth');
-  var callback = auth.ack({
-    send: function(data) {
+  var callback = auth.ack({}, {
+    send: function (data) {
       assert.equal(true, data === errors.UnknownError);
       done();
     }

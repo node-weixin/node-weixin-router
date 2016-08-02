@@ -44,7 +44,6 @@ var async = require('async');
 var functions = [
   function (cb) {
     wxRouter.getId(req, function (data) {
-      console.log(data);
       id = data;
       cb(null);
     });
@@ -157,7 +156,7 @@ async.series(functions,
             done();
           }
         };
-        handlers.auth.ack(settings, session)(req, res);
+        handlers.auth.ack(settings)(req, res);
       });
 
       it('should be able to handle auth message', function (done) {
@@ -213,7 +212,7 @@ async.series(functions,
             done();
           }
         };
-        handlers.jssdk.config(settings, session)(req, res);
+        handlers.jssdk.config(settings)(req, res);
       });
 
       it('should be able to handle jssdk with url', function (done) {
@@ -233,7 +232,7 @@ async.series(functions,
             done();
           }
         };
-        handlers.jssdk.config(settings, session)(req1, res);
+        handlers.jssdk.config(settings)(req1, res);
       });
 
       it('should be able to handle jssdk with bad app info', function (done) {

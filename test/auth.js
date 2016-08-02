@@ -3,7 +3,7 @@ var errors = require('../lib/errors');
 
 it('should test auth callback success', function (done) {
   var auth = require('../lib/callbacks/auth');
-  var callback = auth.ack({
+  var callback = auth.ack({}, {
     send: function (data) {
       assert.equal(true, data.code === 0);
       assert.equal(true, data.message === '成功!');
@@ -16,14 +16,28 @@ it('should test auth callback success', function (done) {
   });
 });
 
-it('should test auth callback with key', function (done) {
+it('should test auth callback success with message', function (done) {
   var auth = require('../lib/callbacks/auth');
-  var callback = auth.ack({
+  var callback = auth.ack({}, {
     send: function (data) {
-      assert.equal(true, data === errors.InputInvalid);
-      done();
+      assert(!data);
+      setTimeout(function () {
+        done();
+      });
     }
   });
+  callback(false);
+});
+
+it('should test auth callback with key', function (done) {
+  var auth = require('../lib/callbacks/auth');
+  var callback = auth.ack({},
+    {
+      send: function (data) {
+        assert.equal(true, data === errors.InputInvalid);
+        done();
+      }
+    });
   callback(true, {
     key: 1
   });
@@ -31,7 +45,7 @@ it('should test auth callback with key', function (done) {
 
 it('should test auth callback with signature not match', function (done) {
   var auth = require('../lib/callbacks/auth');
-  var callback = auth.ack({
+  var callback = auth.ack({}, {
     send: function (data) {
       assert.equal(true, data === errors.SignatureNotMatch);
       done();
@@ -42,7 +56,7 @@ it('should test auth callback with signature not match', function (done) {
 
 it('should test auth callback with unkown error', function (done) {
   var auth = require('../lib/callbacks/auth');
-  var callback = auth.ack({
+  var callback = auth.ack({}, {
     send: function (data) {
       assert.equal(true, data === errors.UnknownError);
       done();
@@ -52,49 +66,34 @@ it('should test auth callback with unkown error', function (done) {
 });
 
 it('should handle auth with req.body', function () {
-  var auth = require('../lib/handlers/auth');
-  var callback = auth.ack();
-  callback({
-  },
-    {
-      send: function () {
-      }
-    });
+  var auth = require('../lib/callbacks/auth');
+  auth.onMessage({
+  });
 });
 
 it('should handle auth with req.body', function () {
-  var auth = require('../lib/handlers/auth');
-  var callback = auth.ack();
-  callback({
+  var auth = require('../lib/callbacks/auth');
+  auth.onMessage({
     body: new Buffer('')
-  },
-    {
-      send: function () {
-      }
-    });
+  });
 });
 
 it('should handle auth with req.body', function () {
-  var auth = require('../lib/handlers/auth');
-  var callback = auth.ack();
-  callback({
+  var auth = require('../lib/callbacks/auth');
+  auth.onMessage({
     body: new Buffer('<xml>' +
-    '<ToUserName><![CDATA[toUser]]></ToUserName>' +
-    '<FromUserName><![CDATA[fromUser]]></FromUserName>' +
-    '<CreateTime>1348831860</CreateTime>' +
-    '<MsgType><![CDATA[text]]></MsgType>' +
-    '<Content><![CDATA[this is a test]]></Content>' +
-    '<MsgId>1234567890123456</MsgId>' +
-    '</xml>')
-  },
-    {
-      send: function () {
-      }
-    });
+      '<ToUserName><![CDATA[toUser]]></ToUserName>' +
+      '<FromUserName><![CDATA[fromUser]]></FromUserName>' +
+      '<CreateTime>1348831860</CreateTime>' +
+      '<MsgType><![CDATA[text]]></MsgType>' +
+      '<Content><![CDATA[this is a test]]></Content>' +
+      '<MsgId>1234567890123456</MsgId>' +
+      '</xml>')
+  });
 });
 
 it('should handle auth with req.body', function () {
-  var auth = require('../lib/handlers/auth');
+  var auth = require('../lib/callbacks/auth');
   var callbacks = require('../lib/callbacks');
   callbacks.auth.message = function () {
 
@@ -102,19 +101,14 @@ it('should handle auth with req.body', function () {
   callbacks.auth.event = function () {
 
   };
-  var callback = auth.ack();
-  callback({
+  auth.onMessage({
     body: new Buffer('<xml>' +
-    '<ToUserName><![CDATA[toUser]]></ToUserName>' +
-    '<FromUserName><![CDATA[fromUser]]></FromUserName>' +
-    '<CreateTime>1348831860</CreateTime>' +
-    '<MsgType><![CDATA[text]]></MsgType>' +
-    '<Content><![CDATA[this is a test]]></Content>' +
-    '<MsgId>1234567890123456</MsgId>' +
-    '</xml>')
-  },
-    {
-      send: function () {
-      }
-    });
+      '<ToUserName><![CDATA[toUser]]></ToUserName>' +
+      '<FromUserName><![CDATA[fromUser]]></FromUserName>' +
+      '<CreateTime>1348831860</CreateTime>' +
+      '<MsgType><![CDATA[text]]></MsgType>' +
+      '<Content><![CDATA[this is a test]]></Content>' +
+      '<MsgId>1234567890123456</MsgId>' +
+      '</xml>')
+  });
 });
